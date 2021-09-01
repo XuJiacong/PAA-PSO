@@ -1,147 +1,123 @@
-# BiSeNetV1 & BiSeNetV2
+# PAA-PSO: PID-controller-based Auxiliary Algorithm for PSO
 
-My implementation of [BiSeNetV1](https://arxiv.org/abs/1808.00897) and [BiSeNetV2](https://arxiv.org/abs/1808.00897).
+Official implementation of: A PID Controller Architecture Inspired Enhancement to the PSO Algorithm (FICC 2022)
 
+![highlights](highlights.png)
 
-mIOUs and fps on cityscapes val set:
-| none | ss | ssc | msf | mscf | fps(fp16/fp32) | link |
-|------|:--:|:---:|:---:|:----:|:---:|:----:|
-| bisenetv1 | 75.44 | 76.94 | 77.45 | 78.86 | 68/23 | [download](https://github.com/CoinCheung/BiSeNet/releases/download/0.0.0/model_final_v1_city_new.pth) |
-| bisenetv2 | 74.95 | 75.58 | 76.53 | 77.08 | 59/21 | [download](https://github.com/CoinCheung/BiSeNet/releases/download/0.0.0/model_final_v2_city.pth) |
+## Highlights
+- **Totally box-free:**  SOLO is totally box-free thus not being restricted by (anchor) box locations and scales, and naturally benefits from the inherent advantages of FCNs.
+- **Direct instance segmentation:** Our method takes an image as input, directly outputs instance masks and corresponding class probabilities, in a fully convolutional, box-free and grouping-free paradigm.
+- **High-quality mask prediction:** SOLOv2 is able to predict fine and detailed masks, especially at object boundaries.
+- **State-of-the-art performance:** Our best single model based on ResNet-101 and deformable convolutions achieves **41.7%** in AP on COCO test-dev (without multi-scale testing). A light-weight version of SOLOv2 executes at **31.3** FPS on a single V100 GPU and yields **37.1%** AP.
 
-
-mIOUs on cocostuff val2017 set:
-| none | ss | ssc | msf | mscf | link |
-|------|:--:|:---:|:---:|:----:|:----:|
-| bisenetv1 | 31.49 | 31.42 | 32.46 | 32.55 | [download](https://github.com/CoinCheung/BiSeNet/releases/download/0.0.0/model_final_v1_coco_new.pth) |
-| bisenetv2 | 30.49 | 30.55 | 31.81 | 31.73 | [download](https://github.com/CoinCheung/BiSeNet/releases/download/0.0.0/model_final_v2_coco.pth) |
-
-Tips: 
-1. **ss** means single scale evaluation, **ssc** means single scale crop evaluation, **msf** means multi-scale evaluation with flip augment, and **mscf** means multi-scale crop evaluation with flip evaluation. The eval scales and crop size of multi-scales evaluation can be found in [configs](./configs/).
-
-2. The fps is tested in different way from the paper. For more information, please see [here](./tensorrt).
-
-3. For cocostuff dataset: The authors of the paper `bisenetv2` used the "old split" of 9k train set and 1k val set, while I used the "new split" of 118k train set and 5k val set. Thus the above results on cocostuff does not match the paper. The authors of bisenetv1 did not report their results on cocostuff, so here I simply provide a "make it work" result. Following the tradition of object detection, I used "1x"(90k) and "2x"(180k) schedule to train bisenetv1(1x) and bisenetv2(2x) respectively. Maybe you can have a better result by picking up hyper-parameters more carefully.
-
-4. The model has a big variance, which means that the results of training for many times would vary within a relatively big margin. For example, if you train bisenetv2 for many times, you will observe that the result of **ss** evaluation of bisenetv2 varies between 73.1-75.1. 
+## Updates
+   - SOLOv2 implemented on detectron2 is released at [adet](https://github.com/aim-uofa/AdelaiDet/blob/master/configs/SOLOv2/README.md). (07/12/20)
+   - Training speeds up (~1.7x faster) for all models. (03/12/20)
+   - SOLOv2 is available. Code and trained models of SOLOv2 are released. (08/07/2020)
+   - Light-weight models and R101-based models are available. (31/03/2020) 
+   - SOLOv1 is available. Code and trained models of SOLO and Decoupled SOLO are released. (28/03/2020)
 
 
-## deploy trained models
-1. tensorrt  
-You can go to [tensorrt](./tensorrt) for details.
+## Installation
+This implementation is based on [mmdetection](https://github.com/open-mmlab/mmdetection)(v1.0.0). Please refer to [INSTALL.md](docs/INSTALL.md) for installation and dataset preparation.
 
-2. ncnn  
-You can go to [ncnn](./ncnn) for details.
+## Models
+For your convenience, we provide the following trained models on COCO (more models are coming soon).
+
+Model | Multi-scale training | Testing time / im | AP (minival) | Link
+--- |:---:|:---:|:---:|:---:
+SOLO_R50_1x | No | 77ms | 32.9 | [download](https://cloudstor.aarnet.edu.au/plus/s/nTOgDldI4dvDrPs/download)
+SOLO_R50_3x | Yes | 77ms |  35.8 | [download](https://cloudstor.aarnet.edu.au/plus/s/x4Fb4XQ0OmkBvaQ/download)
+SOLO_R101_3x | Yes | 86ms |  37.1 | [download](https://cloudstor.aarnet.edu.au/plus/s/WxOFQzHhhKQGxDG/download)
+Decoupled_SOLO_R50_1x | No | 85ms | 33.9 | [download](https://cloudstor.aarnet.edu.au/plus/s/RcQyLrZQeeS6JIy/download)
+Decoupled_SOLO_R50_3x | Yes | 85ms | 36.4 | [download](https://cloudstor.aarnet.edu.au/plus/s/dXz11J672ax0Z1Q/download)
+Decoupled_SOLO_R101_3x | Yes | 92ms | 37.9 | [download](https://cloudstor.aarnet.edu.au/plus/s/BRhKBimVmdFDI9o/download)
+SOLOv2_R50_1x | No | 54ms | 34.8 | [download](https://cloudstor.aarnet.edu.au/plus/s/DvjgeaPCarKZoVL/download)
+SOLOv2_R50_3x | Yes | 54ms | 37.5 | [download](https://cloudstor.aarnet.edu.au/plus/s/nkxN1FipqkbfoKX/download)
+SOLOv2_R101_3x | Yes | 66ms | 39.1 | [download](https://cloudstor.aarnet.edu.au/plus/s/61WDqq67tbw1sdw/download)
+SOLOv2_R101_DCN_3x | Yes | 97ms | 41.4 | [download](https://cloudstor.aarnet.edu.au/plus/s/4ePTr9mQeOpw0RZ/download)
+SOLOv2_X101_DCN_3x | Yes | 169ms | 42.4 | [download](https://cloudstor.aarnet.edu.au/plus/s/KV9PevGeV8r4Tzj/download)
+
+**Light-weight models:**
+
+Model | Multi-scale training | Testing time / im | AP (minival) | Link
+--- |:---:|:---:|:---:|:---:
+Decoupled_SOLO_Light_R50_3x | Yes | 29ms | 33.0 | [download](https://cloudstor.aarnet.edu.au/plus/s/d0zuZgCnAjeYvod/download)
+Decoupled_SOLO_Light_DCN_R50_3x | Yes | 36ms | 35.0 | [download](https://cloudstor.aarnet.edu.au/plus/s/QvWhOTmCA5pFj6E/download)
+SOLOv2_Light_448_R18_3x | Yes | 19ms | 29.6 | [download](https://cloudstor.aarnet.edu.au/plus/s/HwHys05haPvNyAY/download)
+SOLOv2_Light_448_R34_3x | Yes | 20ms | 32.0 | [download](https://cloudstor.aarnet.edu.au/plus/s/QLQpXg9ny7sNA6X/download)
+SOLOv2_Light_448_R50_3x | Yes | 24ms | 33.7 | [download](https://cloudstor.aarnet.edu.au/plus/s/cn1jABtVJwsbb2G/download)
+SOLOv2_Light_512_DCN_R50_3x | Yes | 34ms | 36.4 | [download](https://cloudstor.aarnet.edu.au/plus/s/pndBdr1kGOU2iHO/download)
+
+*Disclaimer:*
+
+- Light-weight means light-weight backbone, head and smaller input size. Please refer to the corresponding config files for details.
+- This is a reimplementation and the numbers are slightly different from our original paper (within 0.3% in mask AP).
 
 
-## platform
-My platform is like this: 
-* ubuntu 18.04
-* nvidia Tesla T4 gpu, driver 450.51.05
-* cuda 10.2
-* cudnn 7
-* miniconda python 3.8.8
-* pytorch 1.8.1
+## Usage
+
+### A quick demo
+
+Once the installation is done, you can download the provided models and use [inference_demo.py](demo/inference_demo.py) to run a quick demo.
+
+### Train with multiple GPUs
+    ./tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM}
+
+    Example: 
+    ./tools/dist_train.sh configs/solo/solo_r50_fpn_8gpu_1x.py  8
+
+### Train with single GPU
+    python tools/train.py ${CONFIG_FILE}
+    
+    Example:
+    python tools/train.py configs/solo/solo_r50_fpn_8gpu_1x.py
+
+### Testing
+    # multi-gpu testing
+    ./tools/dist_test.sh ${CONFIG_FILE} ${CHECKPOINT_FILE} ${GPU_NUM}  --show --out  ${OUTPUT_FILE} --eval segm
+    
+    Example: 
+    ./tools/dist_test.sh configs/solo/solo_r50_fpn_8gpu_1x.py SOLO_R50_1x.pth  8  --show --out results_solo.pkl --eval segm
+
+    # single-gpu testing
+    python tools/test_ins.py ${CONFIG_FILE} ${CHECKPOINT_FILE} --show --out  ${OUTPUT_FILE} --eval segm
+    
+    Example: 
+    python tools/test_ins.py configs/solo/solo_r50_fpn_8gpu_1x.py  SOLO_R50_1x.pth --show --out  results_solo.pkl --eval segm
 
 
-## get start
-With a pretrained weight, you can run inference on an single image like this: 
+### Visualization
+
+    python tools/test_ins_vis.py ${CONFIG_FILE} ${CHECKPOINT_FILE} --show --save_dir  ${SAVE_DIR}
+    
+    Example: 
+    python tools/test_ins_vis.py configs/solo/solo_r50_fpn_8gpu_1x.py  SOLO_R50_1x.pth --show --save_dir  work_dirs/vis_solo
+
+## Contributing to the project
+Any pull requests or issues are welcome.
+
+## Citations
+Please consider citing our papers in your publications if the project helps your research. BibTeX reference is as follows.
 ```
-$ python tools/demo.py --config configs/bisenetv2_city.py --weight-path /path/to/your/weights.pth --img-path ./example.png
-```
-This would run inference on the image and save the result image to `./res.jpg`.
+@inproceedings{wang2020solo,
+  title     =  {{SOLO}: Segmenting Objects by Locations},
+  author    =  {Wang, Xinlong and Kong, Tao and Shen, Chunhua and Jiang, Yuning and Li, Lei},
+  booktitle =  {Proc. Eur. Conf. Computer Vision (ECCV)},
+  year      =  {2020}
+}
 
-
-## prepare dataset
-
-1.cityscapes  
-
-Register and download the dataset from the official [website](https://www.cityscapes-dataset.com/). Then decompress them into the `datasets/cityscapes` directory:  
-```
-$ mv /path/to/leftImg8bit_trainvaltest.zip datasets/cityscapes
-$ mv /path/to/gtFine_trainvaltest.zip datasets/cityscapes
-$ cd datasets/cityscapes
-$ unzip leftImg8bit_trainvaltest.zip
-$ unzip gtFine_trainvaltest.zip
-```
-
-2.cocostuff   
-
-Download `train2017.zip`, `val2017.zip` and `stuffthingmaps_trainval2017.zip` split from official [website](https://cocodataset.org/#download). Then do as following:
-```
-$ unzip train2017.zip
-$ unzip val2017.zip
-$ mv train2017/ /path/to/BiSeNet/datasets/coco/images
-$ mv val2017/ /path/to/BiSeNet/datasets/coco/images
-
-$ unzip stuffthingmaps_trainval2017.zip
-$ mv train2017/ /path/to/BiSeNet/datasets/coco/labels
-$ mv val2017/ /path/to/BiSeNet/datasets/coco/labels
-
-$ cd /path/to/BiSeNet
-$ python tools/gen_coco_annos.py
-```
-
-3.custom dataset  
-
-If you want to train on your own dataset, you should generate annotation files first with the format like this: 
-```
-munster_000002_000019_leftImg8bit.png,munster_000002_000019_gtFine_labelIds.png
-frankfurt_000001_079206_leftImg8bit.png,frankfurt_000001_079206_gtFine_labelIds.png
-...
-```
-Each line is a pair of training sample and ground truth image path, which are separated by a single comma `,`.   
-Then you need to change the field of `im_root` and `train/val_im_anns` in the configuration files. If you found what shows in `cityscapes_cv2.py` is not clear, you can also see `coco.py`.
-
-
-## train
-I used the following command to train the models:
-```bash
-# bisenetv1 cityscapes
-export CUDA_VISIBLE_DEVICES=0,1
-cfg_file=configs/bisenetv1_city.py
-NGPUS=2
-python -m torch.distributed.launch --nproc_per_node=$NGPUS tools/train_amp.py --config $cfg_file 
-
-# bisenetv2 cityscapes
-export CUDA_VISIBLE_DEVICES=0,1
-cfg_file=configs/bisenetv2_city.py
-NGPUS=2
-python -m torch.distributed.launch --nproc_per_node=$NGPUS tools/train_amp.py --config $cfg_file 
-
-# bisenetv1 cocostuff
-export CUDA_VISIBLE_DEVICES=0,1,2,3
-cfg_file=configs/bisenetv1_coco.py
-NGPUS=4
-python -m torch.distributed.launch --nproc_per_node=$NGPUS tools/train_amp.py --config $cfg_file 
-
-# bisenetv2 cocostuff
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-cfg_file=configs/bisenetv2_coco.py
-NGPUS=8
-python -m torch.distributed.launch --nproc_per_node=$NGPUS tools/train_amp.py --config $cfg_file 
 ```
 
-Note:  
-1. though `bisenetv2` has fewer flops, it requires much more training iterations. The the training time of `bisenetv1` is shorter.
-2. I used overall batch size of 16 to train all models. Since cocostuff has 171 categories, it requires more memory to train models on it. I split the 16 images into more gpus than 2, as I do with cityscapes.
-
-
-## finetune from trained model
-You can also load the trained model weights and finetune from it, like this:
 ```
-$ export CUDA_VISIBLE_DEVICES=0,1
-$ python -m torch.distributed.launch --nproc_per_node=2 tools/train_amp.py --finetune-from ./res/model_final.pth --config ./configs/bisenetv2_city.py # or bisenetv1
+@article{wang2020solov2,
+  title={SOLOv2: Dynamic and Fast Instance Segmentation},
+  author={Wang, Xinlong and Zhang, Rufeng and  Kong, Tao and Li, Lei and Shen, Chunhua},
+  journal={Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2020}
+}
 ```
 
+## License
 
-## eval pretrained models
-You can also evaluate a trained model like this: 
-```
-$ python tools/evaluate.py --config configs/bisenetv1_city.py --weight-path /path/to/your/weight.pth
-```
-
-
-### Be aware that this is the refactored version of the original codebase. You can go to the `old` directory for original implementation if you need, though I believe you will not need it.
-
-
+For academic use, this project is licensed under the 2-clause BSD License - see the LICENSE file for details. For commercial use, please contact [Xinlong Wang](https://www.xloong.wang/) and  [Chunhua Shen](https://cs.adelaide.edu.au/~chhshen/).
