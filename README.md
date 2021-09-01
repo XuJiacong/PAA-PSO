@@ -18,4 +18,4 @@ we applied all the algorithms on the 30 functions in CEC2014 benchmark test suit
 ![highlights](analogy.png)
 
 ## Convergence
-![highlights](analogy.png)
+![highlights](func18_all.jpg)
