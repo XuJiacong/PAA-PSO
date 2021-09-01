@@ -2,7 +2,7 @@
 
 Official implementation of: A PID Controller Architecture Inspired Enhancement to the PSO Algorithm (FICC 2022)
 
-![highlights](analogy.png)
+![highlights](figs/analogy.png)
 
 ## Highlights
 - **PSO Algorithm is an I controller**: The accumulation of the error in PSO algorithm serves the same function as I controller.
@@ -16,7 +16,7 @@ we applied all the algorithms on the 30 functions in CEC2014 benchmark test suit
 
 ## Accuracy
 PBSv2 is another proposed method based on previous work.
-![highlights](table.png)
+![highlights](figs/table.png)
 
 ## Convergence
-![highlights](func18_all.jpg)
+![highlights](figs/func18_all.jpg)
