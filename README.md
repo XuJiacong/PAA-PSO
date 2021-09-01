@@ -15,6 +15,7 @@ Official implementation of: A PID Controller Architecture Inspired Enhancement t
 we applied all the algorithms on the 30 functions in CEC2014 benchmark test suite for real-parameter optimization.
 
 ## Accuracy
+PBSv2 is another proposed method based on previous work.
 ![highlights](table.png)
 
 ## Convergence
