@@ -20,3 +20,6 @@ PBSv2 is another proposed method based on previous work.
 
 ## Convergence
 ![highlights](figs/func18_all.jpg)
+
+## Reference
+Most of our code was developed based on (http://www5.zzu.edu.cn/cilab/Benchmark/wysyhwtcsj.htm), thanks for their nice contribution.
