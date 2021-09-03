@@ -7,7 +7,7 @@ Official implementation of: A PID Controller Architecture Inspired Enhancement t
 ## Highlights
 - **PSO Algorithm is an I controller**: The accumulation of the error in PSO algorithm serves the same function as I controller.
 - **Overshoot problem of I controller**: The PSO algorithm suffers from long-time convergence due to oscillation around minima.
-- **Added D and I controllers to PSO**: To make up a full PID controller with 3 DOF and D component will moderate the overshoot.
+- **Added D and P controllers to PSO**: To make up a full PID controller with 3 DOF and D component will moderate the overshoot.
 - **Improvement**; This method could signicantly accelerate the convergence speed of PSO algorithm and improve the optimization accuracy with the sacrice of time usage of less than 2%.
 
 
